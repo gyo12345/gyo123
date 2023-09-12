@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>實驗廣告頁面</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .video-container {
+            position: relative;
+            width: 500px;
+        }
+
+        .video {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .button {
+            position: absolute;
+            bottom: 30px;
+            right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .countdown {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/MIQ2w4ibVzA?si=nRM3tZyphURD2ADq" ></iframe>
+        <button id="button" class="button" disabled>略過廣告</button>
+        <div id="countdown" class="countdown"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const button = document.getElementById('button');
+        const countdown = document.getElementById('countdown');
+        let timer;
+
+        video.addEventListener('loadedmetadata', function () {
+            video.play();
+
+            setTimeout(function () {
+                button.style.display = 'block';
+                video.pause();
+                button.removeAttribute('disabled');
+            }, 5000);
+
+            button.addEventListener('click', function () {
+                if (video.paused) {
+                    video.play();
+                    button.style.display = 'none';
+                    countdown.style.display = 'none';
+                    clearTimeout(timer); // 清除計時器
+                }
+            });
+
+            // 倒數計時15秒
+            let remainingTime = 15;
+            countdown.textContent = `倒數 ${remainingTime} 秒`;
+            countdown.style.display = 'block';
+
+            timer = setInterval(function () {
+                remainingTime--;
+                countdown.textContent = `倒數 ${remainingTime} 秒`;
+
+                if (remainingTime === 0) {
+                    clearInterval(timer); // 倒數結束，清除計時器
+                    // 切換到第二個影片
+                    video.src = "影片2.mp4";
+                    video.load(); // 重新載入新的影片
+                    video.play(); // 播放新的影片
+                    countdown.style.display = 'none'; // 隱藏倒數文字
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
